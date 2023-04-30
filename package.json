@@ -6,16 +6,17 @@
     "name": "Ulises Himely",
     "url": "https://ulises.codes"
   },
-  "homepage": "https://github.com/elevationchurch/schedule-listings",
+  "homepage": "https://github.com/elevationchurch/datocms-plugin-schedule-listings/",
   "description": "Sometimes you need to outline a schedule in a way that can be manipulated on the frontend.",
   "keywords": [
     "datocms-plugin"
   ],
   "datoCmsPlugin": {
     "title": "schedule-listings",
-    "previewImage": "",
-    "coverImage": "",
-    "entryPoint": "build/index.html"
+    "coverImage": "docs/cover.png",
+    "previewImage": "docs/preview.mp4",
+    "entryPoint": "build/index.html",
+    "permissions": []
   },
   "files": [
     "build"
