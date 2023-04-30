@@ -1,0 +1,173 @@
+:root {
+  --black: #2a2a2a;
+  --white: #f5f5f5;
+}
+
+body {
+  font-family: var(--base-font-family);
+}
+
+.form {
+  margin: 0 !important;
+  border: 1px solid var(--white);
+  border-radius: 4px;
+}
+
+.formRoot {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+.section {
+  position: relative;
+  padding: 48px 8px 8px 8px;
+}
+
+.sectionHeading {
+  --heading-padding: 10px;
+
+  top: 0;
+  left: 0;
+  padding: var(--heading-padding);
+  width: 100%;
+  max-width: calc(100% - var(--heading-padding) * 2);
+  position: absolute;
+  line-height: normal;
+  background-color: var(--white);
+}
+
+.sectionHeading .h2 {
+  margin: 0;
+  font-size: 0.9rem;
+  color: #848484;
+}
+
+.weekdaysWrapper {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 4px;
+}
+
+.label {
+  height: 30px;
+  position: relative;
+  cursor: pointer;
+  padding: 8px;
+  font-size: 1rem;
+  color: var(--black) !important;
+  user-select: none;
+  margin-bottom: 0 !important;
+}
+
+.hr {
+  height: 1px;
+  border: none;
+  background-color: var(--white);
+}
+
+.placeholder {
+  background-color: var(--white);
+}
+
+.label:has(.checkbox:checked) {
+  color: var(--white) !important;
+}
+
+.label:hover {
+  color: var(--white) !important;
+}
+
+.label:hover .checkbox {
+  background-color: var(--accent-color);
+  opacity: 0.8;
+}
+
+.label :first-child {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  height: 100%;
+  color: inherit !important;
+}
+
+.weekday {
+  color: inherit;
+}
+
+.checkbox {
+  appearance: none;
+  top: 0;
+  left: 0;
+  margin: 0;
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  background-color: var(--white);
+  z-index: -1;
+}
+
+.checkbox:checked {
+  background-color: var(--accent-color);
+}
+
+.timeSlots {
+  display: grid;
+  flex-wrap: wrap;
+  grid-template-columns: repeat(2, 1fr);
+  align-items: center;
+  gap: 16px;
+  margin: 16px 0;
+}
+
+.timeSlot {
+  display: flex;
+  align-items: end;
+  gap: 8px;
+}
+
+.timeWrapper {
+  position: relative;
+}
+
+.closeButton {
+  cursor: pointer;
+  background-color: transparent;
+  border: none;
+  height: 43.75px;
+}
+
+.addTimeSlotButton {
+  display: flex;
+  gap: 4px;
+  text-transform: uppercase;
+  cursor: pointer;
+  background-color: transparent;
+  border: none;
+  font-size: 1rem;
+  color: #45ca00;
+  background-color: rgba(100, 200, 100, 0.25);
+  padding: 8px;
+}
+
+.addTimeSlotButton:hover {
+  background-color: rgba(100, 200, 100, 0.1);
+}
+
+.dropdownWrapper {
+  display: flex;
+  flex-direction: column;
+  flex-grow: 1;
+  justify-content: space-between;
+  height: 72.25px;
+}
+
+.dropdownWrapper > div {
+  width: 100%;
+  flex-grow: 1;
+}
+
+.dropdownWrapper > div > div {
+  height: 100%;
+}
