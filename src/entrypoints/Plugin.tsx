@@ -34,7 +34,7 @@ interface TimeSlot {
   timezone: Timezone;
 }
 
-interface TimeSlotProps extends InputHTMLAttributes<HTMLInputElement> {
+interface TimeSlotsProps extends InputHTMLAttributes<HTMLInputElement> {
   id: string;
   isOnlySlot: boolean;
   slotValue: TimeSlot;
@@ -42,7 +42,7 @@ interface TimeSlotProps extends InputHTMLAttributes<HTMLInputElement> {
   onRemove: () => void;
 }
 
-const TimeSlot: FunctionComponent<TimeSlotProps> = ({
+const TimeSlots: FunctionComponent<TimeSlotsProps> = ({
   id,
   isOnlySlot,
   slotValue,
@@ -176,7 +176,7 @@ export default function Plugin({ ctx }: PluginProps) {
             </button>
             <div className={styles.timeSlots}>
               {timeSlots.map((slot) => (
-                <TimeSlot
+                <TimeSlots
                   key={slot.id}
                   id={slot.id}
                   isOnlySlot={timeSlots.length === 1}
