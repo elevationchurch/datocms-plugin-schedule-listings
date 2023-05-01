@@ -1,6 +1,6 @@
 {
   "name": "datocms-plugin-schedule-listings",
-  "version": "0.2.0",
+  "version": "0.2.1",
   "private": false,
   "author": {
     "name": "Ulises Himely",
@@ -13,7 +13,7 @@
   ],
   "datoCmsPlugin": {
     "title": "schedule-listings",
-    "coverImage": "docs/cover.png",
+    "coverImage": "docs/cover.svg",
     "previewImage": "docs/preview.mp4",
     "entryPoint": "build/index.html",
     "permissions": []
