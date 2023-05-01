@@ -1,5 +1,6 @@
 import { RenderFieldExtensionCtx } from 'datocms-plugin-sdk';
 import {
+  Button,
   Canvas,
   Form,
   FormLabel,
@@ -20,24 +21,33 @@ import { generateId } from '../lib/helper';
 import AddButton from '../utils/AddButton';
 import saveFieldValue from '../lib/saveFieldValue';
 import TIMEZONES from '../lib/timezones';
+import MinusIcon from '../utils/MinusIcon';
 
 type Weekday = (typeof WEEKDAYS)[number];
 type Timezone = (typeof TIMEZONES)[number];
 
-interface PluginProps {
-  ctx: RenderFieldExtensionCtx;
-}
-
-interface TimeSlot {
+interface TimeSlotValue {
   id: string;
   time: string;
   timezone: Timezone;
 }
 
-interface TimeSlotsProps extends InputHTMLAttributes<HTMLInputElement> {
+interface ListingProps {
+  ctx: RenderFieldExtensionCtx;
+  weekdays: Weekday[];
+  timeSlots: TimeSlotValue[];
+  id: string;
+  onChange: (
+    key: 'weekdays' | 'timeSlots',
+    v: Weekday[] | TimeSlotValue[],
+  ) => void;
+  onRemove: (id: string) => void;
+}
+
+interface TimeSlotProps extends InputHTMLAttributes<HTMLInputElement> {
   id: string;
   isOnlySlot: boolean;
-  slotValue: TimeSlot;
+  slotValue: TimeSlotValue;
   onChangeValue: (key: string, value: string | Timezone) => void;
   onRemove: () => void;
 }
@@ -92,117 +102,172 @@ const TimeSlots: FunctionComponent<TimeSlotsProps> = ({
   );
 };
 
-export default function Plugin({ ctx }: PluginProps) {
-  const initialValue = useRef(
-    JSON.parse(ctx.formValues[ctx.fieldPath] as string),
-  );
+export const Listing = ({
+  ctx,
+  id,
+  weekdays,
+  timeSlots,
+  onChange,
+  onRemove,
+}: ListingProps) => (
+  <Form className={styles.form}>
+    <div className={styles.formRoot}>
+      <section className={styles.section}>
+        <div className={styles.sectionHeading}>
+          <h2 className={styles.h2}>Weekdays</h2>
+          <button className={styles.minusButton} onClick={() => onRemove(id)}>
+            <MinusIcon />
+          </button>
+        </div>
+        <div className={styles.weekdaysWrapper}>
+          {WEEKDAYS.map((weekday) => {
+            const id = `${ctx.field.id}-${weekday.long}`;
+            return (
+              <FormLabel
+                key={weekday.long}
+                htmlFor={id}
+                className={styles.label}
+              >
+                <input
+                  type='checkbox'
+                  id={id}
+                  className={styles.checkbox}
+                  checked={weekdays.some(
+                    (w) => w.position === weekday.position,
+                  )}
+                  onChange={(e) => {
+                    if (
+                      e.target.checked &&
+                      !weekdays.some((w) => w.position === weekday.position)
+                    ) {
+                      onChange('weekdays', weekdays.concat(weekday));
+                    } else {
+                      onChange(
+                        'weekdays',
+                        weekdays.filter((w) => w.position !== weekday.position),
+                      );
+                    }
+                  }}
+                />
+                <span className={styles.weekday}>{weekday.long}</span>
+              </FormLabel>
+            );
+          })}
+          <div className={styles.placeholder}></div>
+        </div>
+      </section>
+      <hr className={styles.hr} />
+      <section className={styles.section}>
+        <div className={styles.sectionHeading}>
+          <h2 className={styles.h2}>Time Slots</h2>
+        </div>
+        <button
+          className={styles.addTimeSlotButton}
+          onClick={() => {
+            onChange('timeSlots', [
+              ...timeSlots,
+              {
+                id: generateId(ctx, 'timeslot'),
+                time: '',
+                timezone: TIMEZONES[0],
+              },
+            ]);
+          }}
+        >
+          <AddButton />
+          <span>New Time Slot</span>
+        </button>
+        <div className={styles.timeSlots}>
+          {timeSlots.map((slot) => (
+            <TimeSlot
+              key={slot.id}
+              id={slot.id}
+              isOnlySlot={timeSlots.length === 1}
+              slotValue={slot}
+              onRemove={() => {
+                onChange(
+                  'timeSlots',
+                  timeSlots.filter((timeSlot) => timeSlot.id !== slot.id),
+                );
+              }}
+              onChangeValue={(key, value) => {
+                onChange(
+                  'timeSlots',
+                  timeSlots.map((timeSlot) => {
+                    if (timeSlot.id === slot.id) {
+                      return { ...slot, [key]: value };
+                    } else {
+                      return timeSlot;
+                    }
+                  }),
+                );
+              }}
+            />
+          ))}
+        </div>
+      </section>
+    </div>
+  </Form>
+);
 
-  const [weekdays, setWeekdays] = useState<Weekday[]>(
-    initialValue.current ? initialValue.current.weekdays : [],
-  );
+interface IndividualListing {
+  weekdays: Weekday[];
+  timeSlots: TimeSlotValue[];
+  id: string;
+}
 
-  const [timeSlots, setTimeSlots] = useState<TimeSlot[]>(
-    initialValue.current
-      ? initialValue.current.timeSlots
-      : [{ id: generateId(ctx), time: '', timezone: TIMEZONES[0] }],
-  );
+const Listings = ({ ctx }: { ctx: RenderFieldExtensionCtx }) => {
+  const [listings, setListings] = useState<IndividualListing[]>([
+    {
+      timeSlots: [
+        { id: generateId(ctx, 'timeslot'), time: '', timezone: TIMEZONES[0] },
+      ],
+      weekdays: [],
+      id: generateId(ctx, 'listing'),
+    },
+  ]);
 
   useEffect(() => {
-    saveFieldValue(ctx, { weekdays, timeSlots });
-  }, [weekdays, timeSlots, ctx]);
+    console.log(listings);
+    saveFieldValue(ctx, listings);
+  }, [ctx, listings]);
 
   return (
     <Canvas ctx={ctx}>
-      <Form className={styles.form}>
-        <div className={styles.formRoot}>
-          <section className={styles.section}>
-            <div className={styles.sectionHeading}>
-              <h2 className={styles.h2}>Weekdays</h2>
-            </div>
-            <div className={styles.weekdaysWrapper}>
-              {WEEKDAYS.map((weekday) => {
-                const id = `${ctx.field.id}-${weekday.long}`;
-                return (
-                  <FormLabel
-                    key={weekday.long}
-                    htmlFor={id}
-                    className={styles.label}
-                  >
-                    <input
-                      type='checkbox'
-                      id={id}
-                      className={styles.checkbox}
-                      checked={weekdays.some(
-                        (w) => w.position === weekday.position,
-                      )}
-                      onChange={(e) => {
-                        if (
-                          e.target.checked &&
-                          !weekdays.some((w) => w.position === weekday.position)
-                        ) {
-                          setWeekdays(weekdays.concat(weekday));
-                        } else {
-                          setWeekdays(
-                            weekdays.filter(
-                              (w) => w.position !== weekday.position,
-                            ),
-                          );
-                        }
-                      }}
-                    />
-                    <span className={styles.weekday}>{weekday.long}</span>
-                  </FormLabel>
-                );
-              })}
-              <div className={styles.placeholder}></div>
-            </div>
-          </section>
-          <hr className={styles.hr} />
-          <section className={styles.section}>
-            <div className={styles.sectionHeading}>
-              <h2 className={styles.h2}>Time Slots</h2>
-            </div>
-            <button
-              className={styles.addTimeSlotButton}
-              onClick={() => {
-                setTimeSlots([
-                  ...timeSlots,
-                  { id: generateId(ctx), time: '', timezone: TIMEZONES[0] },
-                ]);
-              }}
-            >
-              <AddButton />
-              <span>New Time Slot</span>
-            </button>
-            <div className={styles.timeSlots}>
-              {timeSlots.map((slot) => (
-                <TimeSlots
-                  key={slot.id}
-                  id={slot.id}
-                  isOnlySlot={timeSlots.length === 1}
-                  slotValue={slot}
-                  onRemove={() =>
-                    setTimeSlots(
-                      timeSlots.filter((timeSlot) => timeSlot.id !== slot.id),
-                    )
-                  }
-                  onChangeValue={(key, value) => {
-                    setTimeSlots(
-                      timeSlots.map((timeSlot) => {
-                        if (timeSlot.id === slot.id) {
-                          return { ...slot, [key]: value };
-                        } else {
-                          return timeSlot;
-                        }
-                      }),
-                    );
-                  }}
-                />
-              ))}
-            </div>
-          </section>
-        </div>
-      </Form>
+      <div className={styles.listingsWrapper}>
+        {listings.map(({ timeSlots, weekdays, id }) => (
+          <Listing
+            key={id}
+            ctx={ctx}
+            id={id}
+            timeSlots={timeSlots}
+            weekdays={weekdays}
+            onChange={(k, v) => {
+              setListings(
+                listings.map((listing) => {
+                  return listing.id === id ? { ...listing, [k]: v } : listing;
+                }),
+              );
+            }}
+            onRemove={(id) => {
+              setListings(listings.filter((listing) => listing.id !== id));
+            }}
+          />
+        ))}
+
+        <Button
+          onClick={() => {
+            setListings([
+              ...listings,
+              { timeSlots: [], weekdays: [], id: generateId(ctx, 'listing') },
+            ]);
+          }}
+        >
+          Add Listing
+        </Button>
+      </div>
     </Canvas>
   );
-}
+};
+
+export default Listings;
