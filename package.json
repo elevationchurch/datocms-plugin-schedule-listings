@@ -13,7 +13,7 @@
   ],
   "datoCmsPlugin": {
     "title": "schedule-listings",
-    "coverImage": "docs/cover.png",
+    "coverImage": "docs/cover.svg",
     "previewImage": "docs/preview.mp4",
     "entryPoint": "build/index.html",
     "permissions": []
