@@ -26,7 +26,7 @@ import MinusIcon from '../utils/MinusIcon';
 type Weekday = (typeof WEEKDAYS)[number];
 type Timezone = (typeof TIMEZONES)[number];
 
-interface TimeSlotValue {
+interface TimeSlotProps {
   id: string;
   time: string;
   timezone: Timezone;
@@ -35,24 +35,24 @@ interface TimeSlotValue {
 interface ListingProps {
   ctx: RenderFieldExtensionCtx;
   weekdays: Weekday[];
-  timeSlots: TimeSlotValue[];
+  timeSlots: TimeSlotProps[];
   id: string;
   onChange: (
     key: 'weekdays' | 'timeSlots',
-    v: Weekday[] | TimeSlotValue[],
+    v: Weekday[] | TimeSlotProps[],
   ) => void;
   onRemove: (id: string) => void;
 }
 
-interface TimeSlotProps extends InputHTMLAttributes<HTMLInputElement> {
+interface TimeSlotComponentProps extends InputHTMLAttributes<HTMLInputElement> {
   id: string;
   isOnlySlot: boolean;
-  slotValue: TimeSlotValue;
+  slotValue: TimeSlotProps;
   onChangeValue: (key: string, value: string | Timezone) => void;
   onRemove: () => void;
 }
 
-const TimeSlots: FunctionComponent<TimeSlotsProps> = ({
+const TimeSlotComponent: FunctionComponent<TimeSlotComponentProps> = ({
   id,
   isOnlySlot,
   slotValue,
@@ -179,7 +179,7 @@ export const Listing = ({
         </button>
         <div className={styles.timeSlots}>
           {timeSlots.map((slot) => (
-            <TimeSlot
+            <TimeSlotComponent
               key={slot.id}
               id={slot.id}
               isOnlySlot={timeSlots.length === 1}
@@ -212,7 +212,7 @@ export const Listing = ({
 
 interface IndividualListing {
   weekdays: Weekday[];
-  timeSlots: TimeSlotValue[];
+  timeSlots: TimeSlotProps[];
   id: string;
 }
 
