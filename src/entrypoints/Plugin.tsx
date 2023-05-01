@@ -216,18 +216,31 @@ interface IndividualListing {
 }
 
 const Listings = ({ ctx }: { ctx: RenderFieldExtensionCtx }) => {
-  const [listings, setListings] = useState<IndividualListing[]>([
-    {
-      timeSlots: [
-        { id: generateId(ctx, 'timeslot'), time: '', timezone: TIMEZONES[0] },
-      ],
-      weekdays: [],
-      id: generateId(ctx, 'listing'),
-    },
-  ]);
+  const defaultListing = {
+    timeSlots: [
+      {
+        id: generateId(ctx, 'timeslot'),
+        time: '',
+        timezone: TIMEZONES[0],
+      },
+    ],
+    weekdays: [],
+    id: generateId(ctx, 'listing'),
+  };
+
+  const [listings, setListings] = useState<IndividualListing[]>(() => {
+    const initial = ctx.formValues[ctx.fieldPath];
+
+    if (!initial) return [defaultListing];
+
+    try {
+      return JSON.parse(initial as string);
+    } catch (_) {
+      return [defaultListing];
+    }
+  });
 
   useEffect(() => {
-    console.log(listings);
     saveFieldValue(ctx, listings);
   }, [ctx, listings]);
 
@@ -256,10 +269,7 @@ const Listings = ({ ctx }: { ctx: RenderFieldExtensionCtx }) => {
 
         <Button
           onClick={() => {
-            setListings([
-              ...listings,
-              { timeSlots: [], weekdays: [], id: generateId(ctx, 'listing') },
-            ]);
+            setListings([...listings, defaultListing]);
           }}
         >
           Add Listing
