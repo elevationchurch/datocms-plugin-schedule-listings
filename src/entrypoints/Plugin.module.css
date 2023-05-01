@@ -7,6 +7,12 @@ body {
   font-family: var(--base-font-family);
 }
 
+.listingsWrapper {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
 .form {
   margin: 0 !important;
   border: 1px solid var(--white);
@@ -35,12 +41,21 @@ body {
   position: absolute;
   line-height: normal;
   background-color: var(--white);
+  display: flex;
+  justify-content: space-between;
 }
 
 .sectionHeading .h2 {
   margin: 0;
   font-size: 0.9rem;
   color: #848484;
+}
+
+.minusButton {
+  color: var(--remove-color);
+  padding: 0;
+  border: none;
+  cursor: pointer;
 }
 
 .weekdaysWrapper {
