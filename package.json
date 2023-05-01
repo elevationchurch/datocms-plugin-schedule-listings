@@ -1,6 +1,6 @@
 {
   "name": "datocms-plugin-schedule-listings",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "private": false,
   "author": {
     "name": "Ulises Himely",
@@ -19,7 +19,8 @@
     "permissions": []
   },
   "files": [
-    "build"
+    "build",
+    "docs"
   ],
   "dependencies": {
     "@types/node": "^18.15.11",
