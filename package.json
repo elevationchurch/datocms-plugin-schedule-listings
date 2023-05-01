@@ -19,7 +19,8 @@
     "permissions": []
   },
   "files": [
-    "build"
+    "build",
+    "docs"
   ],
   "dependencies": {
     "@types/node": "^18.15.11",
