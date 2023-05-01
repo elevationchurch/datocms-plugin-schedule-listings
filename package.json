@@ -12,7 +12,7 @@
     "datocms-plugin"
   ],
   "datoCmsPlugin": {
-    "title": "schedule-listings",
+    "title": "Schedule Listings",
     "coverImage": "docs/cover.png",
     "previewImage": "docs/preview.mp4",
     "entryPoint": "build/index.html",
