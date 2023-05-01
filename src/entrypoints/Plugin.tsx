@@ -13,7 +13,6 @@ import {
   FunctionComponent,
   InputHTMLAttributes,
   useEffect,
-  useRef,
   useState,
 } from 'react';
 import CloseButton from '../utils/CloseButton';
