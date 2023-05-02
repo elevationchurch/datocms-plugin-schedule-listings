@@ -120,16 +120,17 @@ export const Listing = ({
         </div>
         <div className={styles.weekdaysWrapper}>
           {WEEKDAYS.map((weekday) => {
-            const id = `${ctx.field.id}-${weekday.long}`;
+            const weekdayId = `${ctx.field.id}-${weekday.long}-${id}`;
+
             return (
               <FormLabel
-                key={weekday.long}
-                htmlFor={id}
+                key={weekdayId}
+                htmlFor={weekdayId}
                 className={styles.label}
               >
                 <input
                   type='checkbox'
-                  id={id}
+                  id={weekdayId}
                   className={styles.checkbox}
                   checked={weekdays.some(
                     (w) => w.position === weekday.position,
